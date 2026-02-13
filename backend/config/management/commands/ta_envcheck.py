@@ -89,7 +89,7 @@ class Command(BaseCommand):
         self._expected_vars()
         self._unexpected_vars()
         self._elastic_user_overwrite()
-        self._ta_port_overwrite()
+        self._ta_listen_overwrite()
         self._ta_backend_port_overwrite()
         self._disable_static_auth()
         self._create_superuser()
@@ -183,21 +183,21 @@ class Command(BaseCommand):
         env = EnvironmentSettings.ES_USER
         self.stdout.write(self.style.SUCCESS(f"    ✓ ES user is set to {env}"))
 
-    def _ta_port_overwrite(self):
-        """set TA_PORT overwrite for nginx"""
-        self.stdout.write("[4] check TA_PORT overwrite")
-        overwrite = EnvironmentSettings.TA_PORT
-        if not overwrite:
-            self.stdout.write(self.style.SUCCESS("    TA_PORT is not set"))
+    def _ta_listen_overwrite(self):
+        """set TA_LISTEN overwrite for nginx"""
+        self.stdout.write("[4] check TA_LISTEN overwrite")
+        overwrite = EnvironmentSettings.TA_LISTEN
+        if overwrite is None:
+            self.stdout.write(self.style.SUCCESS("    TA_LISTEN is not set"))
             return
 
-        regex = re.compile(r"listen [0-9]{1,5}")
-        to_overwrite = f"listen {overwrite}"
+        regex = re.compile(r"listen (?:[0-9]{1,5}|unix:.+);")
+        to_overwrite = f"listen {overwrite};"
         changed = file_overwrite(NGINX, regex, to_overwrite)
         if changed:
-            message = f"    ✓ TA_PORT changed to {overwrite}"
+            message = f"    ✓ TA_LISTEN changed to {overwrite}"
         else:
-            message = f"    ✓ TA_PORT already set to {overwrite}"
+            message = f"    ✓ TA_LISTEN already set to {overwrite}"
 
         self.stdout.write(self.style.SUCCESS(message))
 

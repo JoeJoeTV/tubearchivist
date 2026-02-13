@@ -52,7 +52,7 @@ class EnvironmentSettings:
     HOST_GID: int = int(environ.get("HOST_GID", False))
     DISABLE_STATIC_AUTH: bool = bool(environ.get("DISABLE_STATIC_AUTH"))
     TZ: str = str(environ.get("TZ", "UTC"))
-    TA_PORT: int = int(environ.get("TA_PORT", False))
+    TA_LISTEN: str | None = environ.get("TA_LISTEN", None)
     TA_BACKEND_PORT: int = int(environ.get("TA_BACKEND_PORT", False))
     TA_USERNAME: str = str(environ.get("TA_USERNAME"))
     TA_PASSWORD: str = get_password_from_file("TA_PASSWORD")
@@ -98,7 +98,7 @@ class EnvironmentSettings:
             HOST_GID: {self.HOST_GID}
             TZ: {self.TZ}
             DISABLE_STATIC_AUTH: {self.DISABLE_STATIC_AUTH}
-            TA_PORT: {self.TA_PORT}
+            TA_LISTEN: {self.TA_LISTEN}
             TA_BACKEND_PORT: {self.TA_BACKEND_PORT}
             TA_USERNAME: {self.TA_USERNAME}
             TA_PASSWORD: *****""")
