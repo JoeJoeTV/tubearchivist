@@ -1,11 +1,11 @@
 # multi stage to build tube archivist
 # build python wheel, download and extract ffmpeg, copy into final image
 
-FROM node:24.14.1-alpine AS npm-builder
+FROM docker.io/node:24.14.1-alpine AS npm-builder
 COPY frontend/package.json frontend/package-lock.json /
 RUN npm i
 
-FROM node:24.14.1-alpine AS node-builder
+FROM docker.io/node:24.14.1-alpine AS node-builder
 
 # RUN npm config set registry https://registry.npmjs.org/
 
@@ -18,7 +18,7 @@ RUN npm run build:deploy
 WORKDIR /
 
 # First stage to build python wheel
-FROM python:3.13.11-slim-trixie AS builder
+FROM docker.io/python:3.13.11-slim-trixie AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential gcc libldap2-dev libsasl2-dev libssl-dev git
@@ -28,7 +28,7 @@ COPY ./backend/requirements.txt /requirements.txt
 RUN pip install --user -r requirements.txt
 
 # build ffmpeg
-FROM python:3.13.11-slim-trixie AS ffmpeg-builder
+FROM docker.io/python:3.13.11-slim-trixie AS ffmpeg-builder
 
 ARG TARGETPLATFORM
 
@@ -36,13 +36,13 @@ COPY docker_assets/ffmpeg_download.py ffmpeg_download.py
 RUN python ffmpeg_download.py $TARGETPLATFORM
 
 # build final image
-FROM python:3.13.11-slim-trixie AS tubearchivist
+FROM docker.io/python:3.13.11-slim-trixie AS tubearchivist
 
 ARG INSTALL_DEBUG
 
 ENV PYTHONUNBUFFERED=1
 
-COPY --from=denoland/deno:bin /deno /usr/local/bin/deno
+COPY --from=docker.io/denoland/deno:bin /deno /usr/local/bin/deno
 
 # copy build requirements
 COPY --from=builder /root/.local /root/.local
