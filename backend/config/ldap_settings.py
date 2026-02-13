@@ -68,6 +68,18 @@ AUTH_LDAP_USER_ATTR_MAP = {
     "email": AUTH_LDAP_USER_ATTR_MAP_EMAIL,
 }
 
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {}
+
+if "TA_LDAP_USER_FLAGS_BY_GROUP_ACTIVE" in environ:
+    AUTH_LDAP_USER_FLAGS_BY_GROUP['is_active'] = environ.get("TA_LDAP_USER_FLAGS_BY_GROUP_ACTIVE")
+
+if "TA_LDAP_USER_FLAGS_BY_GROUP_STAFF" in environ:
+    AUTH_LDAP_USER_FLAGS_BY_GROUP['is_staff'] = environ.get("TA_LDAP_USER_FLAGS_BY_GROUP_STAFF")
+
+if "TA_LDAP_USER_FLAGS_BY_GROUP_SUPERUSER" in environ:
+    AUTH_LDAP_USER_FLAGS_BY_GROUP['is_superuser'] = environ.get("TA_LDAP_USER_FLAGS_BY_GROUP_SUPERUSER")
+
+
 if bool(environ.get("TA_LDAP_DISABLE_CERT_CHECK")):
     # pylint: disable=global-at-module-level
     global AUTH_LDAP_GLOBAL_OPTIONS
