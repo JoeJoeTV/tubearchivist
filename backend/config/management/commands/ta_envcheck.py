@@ -101,6 +101,7 @@ class Command(BaseCommand):
             "TA_LDAP_BIND_DN",
             "TA_LDAP_BIND_PASSWORD",
             "TA_LDAP_USER_BASE",
+            "TA_LDAP_GROUP_BASE",
             "TA_LDAP_USER_FILTER",
         ]
         _login_auth_mode = (

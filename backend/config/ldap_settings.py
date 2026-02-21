@@ -1,7 +1,7 @@
 from os import environ
 
 import ldap
-from django_auth_ldap.config import LDAPSearch
+from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 
 AUTH_LDAP_SERVER_URI = environ.get("TA_LDAP_SERVER_URI")
 
@@ -60,6 +60,16 @@ AUTH_LDAP_USER_SEARCH = LDAPSearch(
     + AUTH_LDAP_USER_FILTER
     + ")",
 )
+
+AUTH_LDAP_GROUP_BASE = environ.get("TA_LDAP_GROUP_BASE")
+
+# Set up the basic group parameters.
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+    AUTH_LDAP_GROUP_BASE,
+    ldap.SCOPE_SUBTREE,
+    '(objectClass=groupOfNames)',
+)
+AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr='cn')
 
 AUTH_LDAP_USER_ATTR_MAP = {
     "username": AUTH_LDAP_USER_ATTR_MAP_USERNAME,
